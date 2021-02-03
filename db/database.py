@@ -38,11 +38,22 @@ class DBSession:
         return self._session.query(DBUser).filter(DBUser.is_delete == 0).all()
 
     def get_message_all(self, uid) -> List[DBMessage]:
-        return self._session.query(DBMessage).filter(DBMessage.is_delete == 0).filter(DBMessage.recipient_id == uid).all()
+        return self._session.query(DBMessage)\
+            .filter(DBMessage.is_delete == 0)\
+            .filter(DBMessage.recipient_id == uid)\
+            .all()
 
-    def get_message_by_id(self, message_id: int) -> DBUser:
-        return self._session.query(DBMessage).filter(DBMessage.is_delete == 0).filter(DBMessage.id == message_id).first()
+    def get_message_by_id(self, message_id: int) -> DBMessage:
+        print("HELLLO !!!!!")
+        message = self._session.query(DBMessage)\
+            .filter(DBMessage.is_delete == 0)\
+            .filter(DBMessage.id == message_id)\
+            .first()
+        print(message)
+        return message
 
+    def get_message_author(self, message_id: int) -> int:
+        return self._session.query(DBMessage.sender_id).filter(DBMessage.id == message_id).first()[0]
 
     def commit_session(self, need_close: bool = False):
         try:

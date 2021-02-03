@@ -75,6 +75,8 @@ class SanicEndpoint:
             except SanicAuthException as e:
                 return await self.make_response_json(status=e.status_code)
 
+
+
         body.update(self.import_body_json(request))
         body.update(self.import_body_headers(request))
 

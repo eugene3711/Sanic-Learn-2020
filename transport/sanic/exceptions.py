@@ -30,3 +30,6 @@ class SanicUserNotFound(SanicException):
 
 class SanicMessageNotFound(SanicException):
     status_code = 404
+
+class SanicForbidden(SanicException):
+    status_code = 403

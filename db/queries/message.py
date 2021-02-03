@@ -51,10 +51,15 @@ def get_message(session: DBSession, message_id: int = None) -> DBMessage:
 def delete_message(session: DBSession, message_id: int) -> DBMessage:
 
     db_message = session.get_message_by_id(message_id)
+    print(db_message.is_delete)
     db_message.is_delete = True
     return db_message
 
 
-def get_messages(session: DBSession, uid) -> List['DBMessage']:
+def get_messages(session: DBSession, uid: int) -> List['DBMessage']:
     return session.get_message_all(uid)
-    
+
+
+def get_message_author(session: DBSession, message_id: int) -> int:
+    author = session.get_message_author(message_id)
+    return author

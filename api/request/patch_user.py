@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validates, ValidationError
 
 from api.base import RequestDto
 
@@ -7,6 +7,10 @@ class RequestPatchUserDtoSchema(Schema):
     first_name = fields.Str()
     last_name = fields.Str()
 
+    @validates('first_name')
+    def validate_age(self, data, **kwargs):
+        if data.strip() == "":
+            raise ValidationError('First name is necessary to provide')
 
 class RequestPatchUserDto(RequestDto, RequestPatchUserDtoSchema):
     fields: list

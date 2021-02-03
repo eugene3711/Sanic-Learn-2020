@@ -7,8 +7,8 @@ from db.database import DBSession
 from db.exceptions import DBMessageNotExistsException, DBDataException, DBIntegrityException
 from db.queries import message as message_queries
 from transport.sanic.endpoints import BaseEndpoint
-from transport.sanic.exceptions import SanicMessageNotFound, SanicDBException
-
+from transport.sanic.exceptions import SanicMessageNotFound, SanicDBException, SanicForbidden
+from helpers.auth import get_id_from_token
 
 class MessageEndpoint(BaseEndpoint):
 
@@ -28,6 +28,11 @@ class MessageEndpoint(BaseEndpoint):
     async def method_patch(
             self, request: Request, body: dict, session: DBSession,  message_id: int, *args, **kwargs
     ) -> BaseHTTPResponse:
+
+        if get_id_from_token(request) != message_queries.get_message_author(session, message_id):
+            print('ID in token: ', get_id_from_token(request))
+            print('ID of msg author:', message_queries.get_message_author(session, message_id))
+            raise SanicForbidden('You have no rights to edit this message')
 
         request_model = RequestPatchMessageDto(body)
         # change only user's messages, not all of them
@@ -50,9 +55,13 @@ class MessageEndpoint(BaseEndpoint):
     ) -> BaseHTTPResponse:
 
         try:
-            user = message_queries.delete_message(session, message_id)
+            message = message_queries.delete_message(session, message_id)
         except DBMessageNotExistsException:
-            raise SanicUserNotFound('User not found')
+            raise SanicMessageNotFound('Message not found')
+
+        if get_id_from_token(request) != message_queries.get_message_author(session, message_id):
+            raise SanicForbidden('You have no rights to delete this message')
+
 
         try:
             session.commit_session()

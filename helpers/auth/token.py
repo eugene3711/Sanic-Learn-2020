@@ -1,3 +1,4 @@
+from sanic.request import Request
 import datetime
 
 import jwt
@@ -5,7 +6,7 @@ import jwt
 from helpers.auth.exceptions import ReadTokenException
 
 
-secret = 'SUPER_SECRET_KEY'
+secret = 'Python Rules!'
 
 
 def create_token(payload: dict) -> str:
@@ -19,3 +20,6 @@ def read_token(token: str) -> dict:
     except jwt.exceptions.PyJWTError:
         raise ReadTokenException
 
+
+def get_id_from_token(request: Request) -> int:
+    return read_token(request.headers['authorization'])['uid']

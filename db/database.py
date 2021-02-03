@@ -44,12 +44,10 @@ class DBSession:
             .all()
 
     def get_message_by_id(self, message_id: int) -> DBMessage:
-        print("HELLLO !!!!!")
         message = self._session.query(DBMessage)\
             .filter(DBMessage.is_delete == 0)\
             .filter(DBMessage.id == message_id)\
             .first()
-        print(message)
         return message
 
     def get_message_author(self, message_id: int) -> int:
@@ -65,9 +63,6 @@ class DBSession:
 
         if need_close:
             self.close_session()
-
-    def get_message_by_id(self, message_id) -> DBMessage:
-        return self._session.query(DBMessage).filter(DBMessage.id == message_id).first()
 
 
 class DataBase:

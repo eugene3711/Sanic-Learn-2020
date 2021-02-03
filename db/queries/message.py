@@ -49,9 +49,7 @@ def get_message(session: DBSession, message_id: int = None) -> DBMessage:
 
 
 def delete_message(session: DBSession, message_id: int) -> DBMessage:
-
     db_message = session.get_message_by_id(message_id)
-    print(db_message.is_delete)
     db_message.is_delete = True
     return db_message
 

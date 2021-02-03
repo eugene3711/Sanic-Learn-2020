@@ -6,8 +6,6 @@ from db.database import DBSession
 from db.queries import user as user_queries
 from transport.sanic.endpoints import BaseEndpoint
 
-from helpers.auth import read_token
-
 
 class AllUserEndpoint(BaseEndpoint):
 
